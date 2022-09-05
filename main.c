@@ -25,59 +25,20 @@ void mostrarDirectorio(Directorio*);
 void modificarDirectorio(Directorio*);
 void eliminarDirectorio(Directorio*);
 void liberarMemoria(Directorio*);
+void menuDirectorio(void);
 
 void main(void)
 {
-	Directorio dir;
-	dir.estado = FALSE;
-	int opc, ciclo = TRUE;
-	
-	do{
-		system("clear");
-
-		printf("\n\t..::DIRECTORIO::..\n\n");
-		printf("1) Crear directorio.\n");
-		printf("2) Mostrar directorio.\n");
-		printf("3) Modificar directorio.\n");
-		printf("4) Eliminar directorio.\n");
-		printf("0) Salir.\n");
-		printf(">>> ");
-		scanf("%d", &opc);
-		_fflush();
-
-		switch(opc)
-		{
-			case 1:
-				delay(1000);
-				crearDirectorio(&dir);
-				_fflush();
-				break;
-			case 2:
-				delay(1000);
-				mostrarDirectorio(&dir);
-				_fflush();
-				break;
-			case 3:
-				delay(1000);
-				modificarDirectorio(&dir);
-				_fflush();
-				break;
-			case 4:
-				delay(1000);
-				eliminarDirectorio(&dir);
-				_fflush();
-				break;
-			case 0:
-				liberarMemoria(&dir);
-				delay(1000);
-				printf("Saliendo\n");
-				ciclo = FALSE;
-				break;
-			default:
-				printf("Opcion inglresada no valida. (MENU)\n");
-				break;
-		}
-	}while(ciclo != FALSE);
+	menuDirectorio();
+	// CREAR LISTA LIGADA O COLA DE PRIORIDAD PARA MULTIPLES DIRECTORIOS USANDO LOS ID´S
+	// CREAR EMPRESAS LAS CUALES PUEDAN ALMACENAR SUS RESPECTIVOS DIRECTORIOS
+	// CONEXIÓN MYSQL O SQLITE3
+	// CREAR ARCHIVOS CON 
+	// 		ID ENCRIPTADO
+	// 	La empresa llamara a menuDirectorio(INT ID)
+	// 	CREAR LISTA DE EMPRESAS CON SU RESPECTIVA LISTA DE DIRECTORIOS
+	// 	CREAR USUARIOS QUE ADMINISTREN LOS DIRECTORIOS
+	// 	CREAR CLIENTES CUYOS ID´S ESTEN LIGADOS A LOS DIRECTORIOS
 }
 
 void _fflush(void)
@@ -140,7 +101,8 @@ void mostrarDirectorio(Directorio *directorio)
 	// dir.empleos = (char *[]){"uno", "dos"};
 	// printf ("%s", &(*dir.empleos)[0]); 
 	system("clear");
-	
+	printf("\n\t..::MOSTRAR::..\n\n");
+
 	if(directorio->estado == FALSE)
 	{
 		printf("\n\tNo existe el directorio. (MOSTRAR)\n\n");
@@ -166,73 +128,99 @@ void modificarDirectorio(Directorio *directorio)
 
 	system("clear");
 	printf("\n\t..::MODIFICAR::..\n\n");
-	printf("1) Nombres.\n");
-	printf("2) Apellidos.\n");
-	printf("3) Numero.\n");
-	printf("4) RFC.\n");
-	printf("5) Modificar Empleos.\n");
-	printf(">>> ");
-	scanf("%d", &opc);
-	_fflush();
 
-	switch(opc)
+	if(directorio->estado == FALSE)
 	{
-		case 1:
-			printf("Nuevo nombre: ");
-			scanf("%s", directorio->nombres);
-			break;
-		case 2:
-			printf("Nuevo apellido: ");
-			scanf("%s", directorio->apellidos);
-			break;
-		case 3:
-			printf("Nuevo numero: ");
-			scanf("%s", directorio->numero);
-			break;
-		case 4:
-			printf("Nuevo RFC: ");
-			scanf("%s", directorio->RFC);
-			break;
-		case 5:
+		printf("\n\tNo existe el directorio. (MOSTRAR)\n\n");
+	}
+	else
+	{
+		printf("1) Nombres.\n");
+		printf("2) Apellidos.\n");
+		printf("3) Numero.\n");
+		printf("4) RFC.\n");
+		printf("5) Modificar Empleos.\n");
+		printf(">>> ");
+		scanf("%d", &opc);
+		_fflush();
+
+		switch(opc)
 		{
-			system("clear");
-			printf("\n\t____----SUBMENU EMPLEOS----____\n\n");
-			printf("1) Modificar un empleo.\n");
-			printf("2) Modificar todos los empleos.\n");
-			printf(">>> ");
-			scanf("%d", &opc_empleos);
-			_fflush();
-
-			switch(opc_empleos)
+			case 1:
+				printf("Nuevo nombre: ");
+				scanf("%s", directorio->nombres);
+				break;
+			case 2:
+				printf("Nuevo apellido: ");
+				scanf("%s", directorio->apellidos);
+				break;
+			case 3:
+				printf("Nuevo numero: ");
+				scanf("%s", directorio->numero);
+				break;
+			case 4:
+				printf("Nuevo RFC: ");
+				scanf("%s", directorio->RFC);
+				break;
+			case 5:
 			{
-				case 1:
+				system("clear");
+				printf("\n\t____----SUBMENU EMPLEOS----____\n\n");
+				printf("1) Modificar un empleo.\n");
+				printf("2) Modificar todos los empleos.\n");
+				printf(">>> ");
+				scanf("%d", &opc_empleos);
+				_fflush();
 
-					break;
-				case 2:
+				switch(opc_empleos)
 				{
-					int i;
-
-					printf("Nueva cantidad de empleos: ");
-					scanf("%d", &directorio->cont_empleos);
-
-					directorio->empleos = (char**)realloc(directorio->empleos, directorio->cont_empleos);
-					for(i = 0; i < directorio->cont_empleos; i++)
+					case 1:
 					{
-						*(directorio->empleos + i) = (char*)malloc(sizeof(char));
-						printf("Empleo No.%d: ", i);
-						scanf("%s", *(directorio->empleos + i));
+						int sub_opc_empleos, i;
+
+						printf("\nEmpleos: \n");
+						for(i = 0; i < directorio->cont_empleos; i++)
+							printf("\t[%i]: %s\n", i, *(directorio->empleos + i));
+
+						printf("Cual empleo deseas actualizar?\n>>> ");
+						scanf("%d", &sub_opc_empleos);
+
+						for(i = 0; i < directorio->cont_empleos; i++)
+						{
+							if(i == sub_opc_empleos)
+							{
+								printf("[%s] -> Actual \n[] -> Nuevo: ", *(directorio->empleos + i));
+								scanf("%s", *(directorio->empleos + i));
+							}
+						}
 					}
+						break;
+					case 2:
+					{
+						int i;
+
+						printf("Nueva cantidad de empleos: ");
+						scanf("%d", &directorio->cont_empleos);
+
+						directorio->empleos = (char**)realloc(directorio->empleos, directorio->cont_empleos);
+						for(i = 0; i < directorio->cont_empleos; i++)
+						{
+							*(directorio->empleos + i) = (char*)malloc(sizeof(char));
+							printf("Empleo No.%d: ", i);
+							scanf("%s", *(directorio->empleos + i));
+						}
+					}
+						break;
+					default:
+						printf("Opcion inglresada no valida. (SUBMENU EMPLEOS)\n");
+						break;
 				}
-					break;
-				default:
-					printf("Opcion inglresada no valida. (SUBMENU EMPLEOS)\n");
-					break;
 			}
+				break;
+			default:
+				printf("Opcion inglresada no valida. (MODIFICAR)\n");
+				break;
 		}
-			break;
-		default:
-			printf("Opcion inglresada no valida. (MODIFICAR)\n");
-			break;
 	}
 }
 
@@ -271,3 +259,59 @@ void liberarMemoria(Directorio *directorio)
 		*(directorio->empleos + i) = '\0';
 	}
 }
+
+void menuDirectorio(void)
+{
+	Directorio dir;
+	dir.estado = FALSE;
+	int opc, ciclo = TRUE;
+	
+	do{
+		system("clear");
+
+		printf("\n\t..::DIRECTORIO::..\n\n");
+		printf("1) Crear directorio.\n");
+		printf("2) Mostrar directorio.\n");
+		printf("3) Modificar directorio.\n");
+		printf("4) Eliminar directorio.\n");
+		printf("0) Salir.\n");
+		printf(">>> ");
+		scanf("%d", &opc);
+		_fflush();
+
+		switch(opc)
+		{
+			case 1:
+				delay(1000);
+				crearDirectorio(&dir);
+				_fflush();
+				break;
+			case 2:
+				delay(1000);
+				mostrarDirectorio(&dir);
+				_fflush();
+				break;
+			case 3:
+				delay(1000);
+				modificarDirectorio(&dir);
+				_fflush();
+				break;
+			case 4:
+				delay(1000);
+				eliminarDirectorio(&dir);
+				_fflush();
+				break;
+			case 0:
+				liberarMemoria(&dir);
+				delay(1000);
+				printf("Saliendo\n");
+				ciclo = FALSE;
+				break;
+			default:
+				printf("Opcion inglresada no valida. (MENU)\n");
+				break;
+		}
+	}while(ciclo != FALSE);
+}
+
+
